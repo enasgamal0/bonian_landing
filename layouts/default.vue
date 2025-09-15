@@ -21,7 +21,7 @@ export default {
 
   head() {
     return {
-      titleTemplate: "Bonian | بنيان",
+      titleTemplate: "Bunyan Tech | بنيان تك",
       meta: [
         {
           hid: 'description',

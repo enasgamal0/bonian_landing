@@ -5,7 +5,7 @@
       <div class="slide_content_wrapper">
         <div class="container-xl">
           <div class="slide_desc_content_wrapper">
-            <h4 class="subtitle">{{ $t('mainSlider')[0].mainTitle }}</h4>
+            <h4 class="subtitle" style="color:#175e5d">{{ $t('mainSlider')[0].mainTitle }}</h4>
             <h2 class="slide_title">{{ $t('mainSlider')[0].title }}</h2>
 
             <div class="slide_desc">

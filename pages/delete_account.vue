@@ -32,11 +32,11 @@
     methods: {
       async getData() {
         try {
-          return await this.$axios.get(`client-api/v1/settings?key=delete_account`).then(response => {
+          return await this.$axios.get(`landing-api/v1/settings/delete_account`).then(response => {
             console.log("response", response)
             this.isLoading = true;
-            this.terms_content = response.data.data.value;
-            this.terms_title = response.data.data.name;
+            this.terms_content = response.data?.text
+            // this.terms_title = response.data.data.name;
           }).catch(error => {
             console.log(error)
           })

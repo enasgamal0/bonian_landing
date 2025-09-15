@@ -177,12 +177,13 @@ export default {
     async sendData() {
 
       try {
-        await this.$axios.$post('client-api/v1/contact-us', this.form).then(response => {
+        await this.$axios.$post('landing-api/v1/contact-us/store', this.form).then(response => {
 
           this.form.name = '';
           this.form.email = '';
           this.form.mobile = '';
           this.form.message = '';
+          this.form.type = '';
 
           this.$refs.observer.reset();
 

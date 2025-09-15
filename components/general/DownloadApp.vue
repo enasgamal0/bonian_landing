@@ -83,10 +83,10 @@ export default {
     async getData() {
       try {
         return await this.$axios
-          .get(`client-api/v1/settings?key=contact_us`)
+          .get(`landing-api/v1/settings/social_contact`)
           .then((res) => {
-            this.google_app = res.data.data?.value?.social?.play_store;
-            this.app_store = res.data.data?.value?.social?.app_store;
+            this.google_app = res.data.data?.value?.play_store;
+            this.app_store = res.data.data?.value?.app_store;
           })
           .catch((error) => {
             console.log(error)
@@ -161,8 +161,14 @@ export default {
       top: 50%;
       left: -20%;
       transform: translateY(-40%);
-      width: 100%;
+      width: 73%;
       height: auto;
+    }
+  }
+
+  @media (max-width: 1263px) {
+    .section_image_wrapper {
+        display: none;
     }
   }
 }

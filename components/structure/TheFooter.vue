@@ -48,7 +48,6 @@
                 <i class="fa-brands fa-whatsapp"></i>
               </a>
             </li>
-    
             <li class="social_links_item" v-if="email">
               <a :href="`mailto:${email}`" class="icon">
                 <i class="fa fa-envelope"></i>
@@ -104,7 +103,7 @@
         <div class="col-lg-4 col-xl-5 d-flex justify-content-between flex-column flex-lg-row my-3">
           <ul class="contact_info_list">
             <li class="contact_info_item">
-              <span class="icon">
+              <span class="icon" v-if="email">
                 <i class="fa-regular fa-envelope"></i>
               </span>
 
@@ -179,18 +178,18 @@ export default {
     // END:: SCROLL TO SECTION
 
     async getData() {
-      await this.$axios.get('client-api/v1/settings?key=contact_us').then((res) => {
+      await this.$axios.get('landing-api/v1/settings/social_contact').then((res) => {
         this.email = res.data.data?.value?.email;
         this.whatsapp = res.data.data?.value?.whatsapp;
         this.phone = res.data.data?.value?.mobile;
         this.address = res.data.data?.value?.address;
-        this.facebook = res.data.data?.value?.social?.facebook;
-        this.linkedIn = res.data.data?.value?.social?.linkedin;
-        this.instagram = res.data.data?.value?.social?.instagram;
-        this.telegram = res.data.data?.value?.social?.telegram;
-        this.snapchat = res.data.data?.value?.social?.snapchat;
-        this.tiktok = res.data.data?.value?.social?.tiktok;
-        this.twitter = res.data.data?.value?.social?.x;
+        this.facebook = res.data.data?.value?.facebook;
+        this.linkedIn = res.data.data?.value?.linkedin;
+        this.instagram = res.data.data?.value?.instagram;
+        this.telegram = res.data.data?.value?.telegram;
+        this.snapchat = res.data.data?.value?.snapchat;
+        this.tiktok = res.data.data?.value?.tikTok;
+        this.twitter = res.data.data?.value?.twitter;
       })
     },
   },
