@@ -18,7 +18,7 @@
     .logo_wrapper {
       img {
         max-height: 120px;
-        object-fit: cover;
+        object-fit: contain;
       }
     }
     // ********** Navbar Routes Styles
@@ -180,7 +180,7 @@
     @include flexSpaceBetweenAlignment;
     .logo_wrapper {
       img {
-        object-fit: cover;
+        object-fit: contain;
       }
     }
     // ********** Navbar Routes Styles
@@ -320,7 +320,7 @@
   }
 }
 .logo_wrapper {
-  max-width: 140px;
+  // width: 140px;
 }
 
 .logo_wrapper a {
@@ -329,8 +329,10 @@
 
 .logo_wrapper a img {
   width: 100%;
+  // max-width: 140px;
+  width: 80px !important;
 }
 #navbar .logo_wrapper a img {
-  width: 60%;
+  width: 120px !important;
   margin: 7px;
 }
