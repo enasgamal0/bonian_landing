@@ -4,7 +4,9 @@
       <!-- <img class="circel d-none d-lg-block opacity-50" src="~/assets/media/images/circel.svg" alt="" /> -->
       <div class="container pt-16 pb-16">
         <div class="text-center">
-          <img src="~/assets/media/logo/logo.png" width="200" alt="Logo" />
+          <nuxt-link :to="localePath('/')">
+            <img src="~/assets/media/logo/logo.png" width="200" alt="Logo" />
+          </nuxt-link>
         </div>
         <div
           class="w-100 mt-16 gap-4 d-flex flex-column flex-lg-row justify-content-between align-center"
@@ -263,47 +265,97 @@
                 </div>
               </div>
 
-              <!-- Main Category - Required -->
-              <p class="text-white">
-                {{ $t('register.main_category') }}
-                <span class="text-danger">*</span>
-              </p>
-              <div class="position-relative mb-3">
-                <multiselect
-                  @input="getSubCategories(formData.category_id?.id)"
-                  v-model="formData.category_id"
-                  :options="categories"
-                  track-by="id"
-                  label="name"
-                  :searchable="false"
-                  :close-on-select="true"
-                  :show-labels="false"
-                  :placeholder="$t('register.select_main_category')"
-                  :multiple="false"
-                  open-direction="bottom"
+              <!-- Categories Section with Add/Remove functionality -->
+              <div class="categories-section">
+                <!-- Category Rows -->
+                <div
+                  v-for="(categoryRow, index) in categoryRows"
+                  :key="index"
+                  class="category-row"
+                  style="
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    margin-bottom: 15px;
+                  "
                 >
-                </multiselect>
-              </div>
-
-              <!-- Sub Categories - Required -->
-              <p class="text-white">
-                {{ $t('register.sub_categories') }}
-                <span class="text-danger">*</span>
-              </p>
-              <div class="position-relative mb-3">
-                <multiselect
-                  v-model="formData.sub_category_ids"
-                  :options="subCategories"
-                  track-by="id"
-                  label="name"
-                  :searchable="false"
-                  :close-on-select="true"
-                  :show-labels="false"
-                  :placeholder="$t('register.select_sub_categories')"
-                  :multiple="true"
-                  open-direction="bottom"
-                >
-                </multiselect>
+                  <div class="flex-grow-1">
+                    <!-- Main Category -->
+                    <p class="text-white">
+                      {{ $t('register.main_category') }}
+                      <span class="text-danger">*</span>
+                    </p>
+                    <div class="position-relative mb-3">
+                      <multiselect
+                        @input="
+                          getSubCategories(categoryRow.category_id?.id, index)
+                        "
+                        v-model="categoryRow.category_id"
+                        :options="getAvailableCategories(index)"
+                        track-by="id"
+                        label="name"
+                        :searchable="false"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        :placeholder="$t('register.select_main_category')"
+                        :multiple="false"
+                        open-direction="bottom"
+                      >
+                      </multiselect>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <!-- Sub Categories -->
+                    <p class="text-white">
+                      {{ $t('register.sub_categories') }}
+                      <span class="text-danger">*</span>
+                    </p>
+                    <div class="position-relative mb-3">
+                      <multiselect
+                        v-model="categoryRow.sub_category_ids"
+                        :options="categoryRow.subCategories"
+                        track-by="id"
+                        label="name"
+                        :searchable="false"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        :placeholder="$t('register.select_sub_categories')"
+                        :multiple="true"
+                        open-direction="bottom"
+                      >
+                      </multiselect>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      gap: 5px;
+                      align-items: center;
+                      margin-top: 15px;
+                    "
+                  >
+                    <!-- Add Button (only show on last row) -->
+                    <button
+                      v-if="index === categoryRows.length - 1"
+                      type="button"
+                      @click="addCategoryRow"
+                      class="category-btn add-btn"
+                      title="Add Category Row"
+                    >
+                      +
+                    </button>
+                    <!-- Remove Button (show if more than 1 row) -->
+                    <button
+                      v-if="categoryRows.length > 1"
+                      type="button"
+                      @click="removeCategoryRow(index)"
+                      class="category-btn remove-btn"
+                      title="Remove Category Row"
+                    >
+                      -
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <!-- City - Required -->
@@ -429,13 +481,18 @@ export default {
         password: '',
         password_confirmation: '',
         commercial_registration_number: '',
-        category_id: null,
-        sub_category_ids: [],
         city_id: null,
         district_id: null,
       },
+      // New structure for multiple category rows
+      categoryRows: [
+        {
+          category_id: null,
+          sub_category_ids: [],
+          subCategories: [],
+        },
+      ],
       categories: [],
-      subCategories: [],
       cities: [],
       districts: [],
     }
@@ -446,6 +503,40 @@ export default {
     },
     toggleConfirmPasswordVisibility() {
       this.showConfirmPassword = !this.showConfirmPassword
+    },
+
+    // Get available categories for a specific row (excluding already selected ones)
+    getAvailableCategories(currentRowIndex) {
+      if (!this.categories) return []
+
+      // Get all selected category IDs from other rows
+      const selectedCategoryIds = this.categoryRows
+        .map((row, index) => {
+          // Don't exclude the current row's selection
+          if (index === currentRowIndex) return null
+          return row.category_id?.id
+        })
+        .filter((id) => id !== null && id !== undefined)
+
+      // Return categories that are not selected in other rows
+      return this.categories.filter(
+        (category) => !selectedCategoryIds.includes(category.id)
+      )
+    },
+
+    // Category management methods
+    addCategoryRow() {
+      this.categoryRows.push({
+        category_id: null,
+        sub_category_ids: [],
+        subCategories: [],
+      })
+    },
+
+    removeCategoryRow(index) {
+      if (this.categoryRows.length > 1) {
+        this.categoryRows.splice(index, 1)
+      }
     },
 
     changeProviderImage(event) {
@@ -534,8 +625,9 @@ export default {
       }
     },
 
-    async getSubCategories(categoryId) {
-      this.formData.sub_category_ids = []
+    // Updated to handle specific category row
+    async getSubCategories(categoryId, rowIndex) {
+      this.categoryRows[rowIndex].sub_category_ids = []
       if (!categoryId) return
       try {
         const response = await this.$axios.get(
@@ -546,7 +638,7 @@ export default {
             },
           }
         )
-        this.subCategories = response.data.data?.data
+        this.categoryRows[rowIndex].subCategories = response.data.data?.data
       } catch (error) {
         console.log('catch : ' + error)
       }
@@ -590,7 +682,6 @@ export default {
           'password_confirmation',
           this.formData.password_confirmation
         )
-        REQUEST_DATA.append('category_id', this.formData.category_id?.id || '')
         REQUEST_DATA.append('city_id', this.formData.city_id?.id || '')
 
         // Optional fields
@@ -618,15 +709,23 @@ export default {
           REQUEST_DATA.append('commercial_image', this.commercialImageFile)
         }
 
-        // Sub categories
-        if (
-          this.formData.sub_category_ids &&
-          this.formData.sub_category_ids.length > 0
-        ) {
-          this.formData.sub_category_ids.forEach((subCategory, index) => {
-            REQUEST_DATA.append(`sub_category_ids[${index}]`, subCategory.id)
-          })
-        }
+        let subIndex = 0
+
+        this.categoryRows.forEach((row, index) => {
+          if (row.category_id) {
+            REQUEST_DATA.append(`category_ids[${index}]`, row.category_id.id)
+          }
+
+          if (row.sub_category_ids && row.sub_category_ids.length > 0) {
+            row.sub_category_ids.forEach((subCategory) => {
+              REQUEST_DATA.append(
+                `sub_category_ids[${subIndex}]`,
+                subCategory.id
+              )
+              subIndex++
+            })
+          }
+        })
 
         // Previous works images
         this.previousWorksFiles.forEach((file, index) => {
@@ -671,11 +770,14 @@ export default {
         this.$swal.fire({
           position: 'top',
           type: 'success',
-          text: this.$t('register.verified_success'),
+          title: this.$t('register.verified_success'),
+          text: this.$t('register.redirect'),
           showConfirmButton: false,
           timer: 5000,
         })
-
+        setTimeout(() => {
+          window.location.href = 'https://bonian.moltaqadev.com/provider-dashboard/';
+        }, 5000)
         this.resetForm()
         this.isLoading = false
         this.showDialog = false
@@ -734,11 +836,17 @@ export default {
         password: '',
         password_confirmation: '',
         commercial_registration_number: '',
-        category_id: null,
-        sub_category_ids: [],
         city_id: null,
         district_id: null,
       }
+      // Reset category rows to initial state
+      this.categoryRows = [
+        {
+          category_id: null,
+          sub_category_ids: [],
+          subCategories: [],
+        },
+      ]
       this.providerImageFile = ''
       this.providerImageUrl = ''
       this.commercialImageFile = ''
@@ -809,6 +917,53 @@ export default {
   padding: 10px;
   border-radius: 10px;
   border: none;
+}
+
+/* Category button styles */
+.category-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.add-btn {
+  background-color: #609191;
+  color: white;
+}
+
+.add-btn:hover {
+  background-color: #4a7373;
+  transform: scale(1.1);
+}
+
+.remove-btn {
+  background-color: #a81927;
+  color: white;
+}
+
+.remove-btn:hover {
+  background-color: #c82333;
+  transform: scale(1.1);
+}
+
+.category-row {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+}
+
+.categories-section {
+  margin-bottom: 20px;
 }
 
 p {
@@ -963,5 +1118,12 @@ p {
 
 .imagesContainer {
   margin-top: 10px;
+}
+
+.register_btn:hover {
+  background-color: #4a7373;
+  transition: all 0.3s ease;
+  transform: scale(1.01);
+  font-weight: bold;
 }
 </style>

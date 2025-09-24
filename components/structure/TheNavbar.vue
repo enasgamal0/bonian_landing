@@ -1,6 +1,10 @@
 <template>
-  <div id="navbar" class="header_content_wrapper" :class="{ sticky: scrollPosition > 50 }">
-    <div class="container-xl py-0">
+  <div
+    id="navbar"
+    class="header_content_wrapper"
+    :class="{ sticky: scrollPosition > 50 }"
+  >
+    <div class="container-xl max-large py-0">
       <!-- Start:: Logo -->
       <div class="logo_wrapper">
         <nuxt-link :to="localePath('/')">
@@ -13,7 +17,10 @@
       <div class="routes_wrapper">
         <ul class="routes_list">
           <li class="navbar_route">
-            <button :class="$route.path == localePath('/') ? 'active' : ''" @click="scrollToSection('hero_section')">
+            <button
+              :class="$route.path == localePath('/') ? 'active' : ''"
+              @click="scrollToSection('hero_section')"
+            >
               {{ $t('nav.home') }}
             </button>
           </li>
@@ -72,8 +79,21 @@
             </nuxt-link>
           </li>
           <li class="navbar_route">
+            <a
+              href="https://bonian.moltaqadev.com/provider-dashboard"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ $t('nav.provider_dashboard') }}
+            </a>
+          </li>
+          <li class="navbar_route">
             <template v-if="$i18n.locale == 'en'">
-              <nuxt-link v-for="(locale, i) in showLocales" :key="i" :to="switchLocalePath(locale.code)">
+              <nuxt-link
+                v-for="(locale, i) in showLocales"
+                :key="i"
+                :to="switchLocalePath(locale.code)"
+              >
                 <span class="icon" @click="changelang">
                   <!-- <img src="~/assets/media/icons/ar.png" width="30" alt="Arabic Flag"> -->
                   ar
@@ -82,7 +102,11 @@
             </template>
 
             <template v-if="$i18n.locale == 'ar'">
-              <nuxt-link v-for="(locale, i) in showLocales" :key="i" :to="switchLocalePath(locale.code)">
+              <nuxt-link
+                v-for="(locale, i) in showLocales"
+                :key="i"
+                :to="switchLocalePath(locale.code)"
+              >
                 <span class="icon" @click="changelang">
                   <!-- <img src="~/assets/media/icons/en.png" width="30" alt="English Flag"> -->
                   en
@@ -96,7 +120,10 @@
 
       <!-- Start:: Navbar Buttons -->
       <div class="navbar_btns_wrapper">
-        <button class="small_screens_menu" @click="toggleSmallScreensNavbarDrawer">
+        <button
+          class="small_screens_menu"
+          @click="toggleSmallScreensNavbarDrawer"
+        >
           <i class="fa-solid fa-ellipsis"></i>
         </button>
       </div>
@@ -104,7 +131,10 @@
     </div>
 
     <!-- Start:: Small Screens Nav Drawer -->
-    <div class="small_screens_nav_bar_wrapper" :class="{ active: smallScreensMenuIsOpen }">
+    <div
+      class="small_screens_nav_bar_wrapper"
+      :class="{ active: smallScreensMenuIsOpen }"
+    >
       <div class="small_screen_menu_close_btn">
         <button @click="toggleSmallScreensNavbarDrawer">
           <i class="fas fa-times fa-lg"></i>
@@ -113,7 +143,10 @@
 
       <ul class="small_screens_nav_bar_links_list">
         <li class="links_list_item" @click="toggleSmallScreensNavbarDrawer">
-          <button :class="$route.path == localePath('/') ? 'active' : ''" @click="scrollToSection('hero_section')">
+          <button
+            :class="$route.path == localePath('/') ? 'active' : ''"
+            @click="scrollToSection('hero_section')"
+          >
             {{ $t('nav.home') }}
           </button>
         </li>
@@ -154,8 +187,22 @@
           </nuxt-link>
         </li>
 
+        <li class="links_list_item" @click="toggleSmallScreensNavbarDrawer">
+          <a
+            href="https://bonian.moltaqadev.com/provider-dashboard"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ $t('nav.provider_dashboard') }}
+          </a>
+        </li>
+
         <li class="links_list_item">
-          <nuxt-link v-for="(locale, i) in showLocales" :key="i" :to="switchLocalePath(locale.code)">
+          <nuxt-link
+            v-for="(locale, i) in showLocales"
+            :key="i"
+            :to="switchLocalePath(locale.code)"
+          >
             <span class="icon"><i class="fas fa-globe"></i></span>
           </nuxt-link>
         </li>
@@ -226,3 +273,8 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+.max-large {
+  max-width: 1820px !important;
+}
+</style>

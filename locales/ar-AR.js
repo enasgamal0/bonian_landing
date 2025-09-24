@@ -11,6 +11,7 @@ export default {
     policy: 'سياسة الخصوصية',
     backToHome: 'الصفحة الرئيسية',
     delete_account: 'كيفية حذف الحساب',
+    provider_dashboard: 'لوحة تحكم مقدم الخدمة',
     lang: 'EN',
   },
   mainSlider: [
@@ -115,6 +116,7 @@ export default {
     verify_code: 'التحقق من الكود',
     resend_code: 'إعادة إرسال الكود',
     registered_success: "تم التسجيل بنجاح",
+    redirect: "سيتم تحويلك للوحة التحكم تلقائيًا",
     verified_success: "تم إنشاء الحساب بنجاح",
     resent_success: "تم إعادة إرسال الكود بنجاح",
     provider_avatar: "صورة مقدم الخدمة",
