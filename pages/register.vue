@@ -798,7 +798,7 @@ export default {
         })
         setTimeout(() => {
           window.location.href =
-            'https://bonian.moltaqadev.com/provider-dashboard&logout=true'
+            'https://bonian.moltaqadev.com/provider-dashboard/home?logout=true'
         }, 5000)
         this.resetForm()
         this.isLoading = false
