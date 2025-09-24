@@ -668,7 +668,29 @@ export default {
       }
     },
 
+    validateCategories() {
+      for (let i = 0; i < this.categoryRows.length; i++) {
+        const row = this.categoryRows[i]
+        if (
+          row.category_id &&
+          (!row.sub_category_ids || row.sub_category_ids.length === 0)
+        ) {
+          this.$toast.error(
+            this.$t('register.category_subcategory_required') ||
+              `Please select at least one subcategory for the selected main category in row ${
+                i + 1
+              }`
+          )
+          return false
+        }
+      }
+      return true
+    },
+
     async submitForm() {
+      if (!this.validateCategories()) {
+        return
+      }
       try {
         this.isLoading = true
         const REQUEST_DATA = new FormData()
@@ -766,7 +788,6 @@ export default {
             },
           }
         )
-
         this.$swal.fire({
           position: 'top',
           type: 'success',
@@ -776,7 +797,8 @@ export default {
           timer: 5000,
         })
         setTimeout(() => {
-          window.location.href = 'https://bonian.moltaqadev.com/provider-dashboard/';
+          window.location.href =
+            'https://bonian.moltaqadev.com/provider-dashboard&logout=true'
         }, 5000)
         this.resetForm()
         this.isLoading = false

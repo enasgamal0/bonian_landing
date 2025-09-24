@@ -137,6 +137,7 @@ export default {
     maroof_number_placeholder: "الرقم المسجل في معروف",
     region: "المنطقة",
     map: "الخريطة",
+    category_subcategory_required: "يجب اختيار القسم الفرعي",
   },
   user: {
     invoice_data: 'معلومات الفاتوره',

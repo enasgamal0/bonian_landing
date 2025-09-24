@@ -133,6 +133,7 @@ export default {
     maroof_number_placeholder: "Maroof Registeration Number",
     region: "Region",
     map: "Map",
+    category_subcategory_required: "Select at least one subcategory for the selected main category",
   },
   user: {
     invoice_data: 'Invoice Data',
