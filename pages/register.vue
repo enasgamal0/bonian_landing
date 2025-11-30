@@ -273,7 +273,6 @@
                   :key="index"
                   class="category-row"
                   style="
-                    display: flex;
                     gap: 10px;
                     align-items: center;
                     margin-bottom: 15px;
@@ -660,7 +659,7 @@ export default {
       if (!cityId) return
       try {
         const response = await this.$axios.get(
-          `landing-api/v1/districts?cityId=${cityId}&page=0&limit=0`
+          `landing-api/v1/districts?city_id=${cityId}&page=0&limit=0`
         )
         this.districts = response.data.data?.data
       } catch (error) {
@@ -1135,7 +1134,6 @@ p {
   justify-content: center;
   min-height: 80px;
   border-radius: 20px;
-  background-color: #f8f9fa;
 }
 
 .imagesContainer {
